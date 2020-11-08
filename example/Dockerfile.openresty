@@ -1,0 +1,29 @@
+FROM chouhongming/openresty:latest
+
+
+RUN apt-get update && \
+    apt-get install -y npm
+
+
+### Install Timezone Package and Set Timezone
+RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
+
+
+### Pack Nginx Conf to Conf Path
+ADD conf/*.conf /usr/local/openresty/nginx/conf/
+ADD lua/*.lua /usr/local/openresty/nginx/lua/
+RUN mkdir -p /var/run/openresty && \
+    mkdir -p /var/log/openresty && \
+    mkdir -p /run/nginx
+
+
+### Pack Your Code to Work Path
+ADD app /var/www/app/
+RUN cd /var/www/app/ && \
+    npm install && \
+    npm run build
+
+
+### Set Openresty Work Path
+WORKDIR /usr/local/openresty/nginx
+

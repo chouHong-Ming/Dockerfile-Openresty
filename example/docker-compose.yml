@@ -1,0 +1,11 @@
+version: "3.7"
+services:
+   web:
+    build:
+      context: .
+      dockerfile: Dockerfile.openresty
+    ports:
+      - "80:80"
+    # If want to test the image that runs on LIVE env, please mark this section
+    command: "openresty -p ."
+
